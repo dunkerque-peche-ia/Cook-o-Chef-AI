@@ -1383,30 +1383,133 @@ body {
 
 /* Printing styles */
 @media print {
-  body {
-    background: #fff !important;
-    color: #000 !important;
+  @page {
+    margin: 1.5cm;
   }
-  .app-header, .intro-card, .form-grid, .loading-panel, .recipe-footer-actions, .app-footer, .recipe-actions, .glow-orb {
+  
+  body {
+    background: #ffffff !important;
+    color: #1a202c !important;
+    font-size: 11pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Hide interactive/ambient elements */
+  .app-header, 
+  .intro-card, 
+  .form-grid, 
+  .loading-panel, 
+  .recipe-footer-actions, 
+  .app-footer, 
+  .recipe-actions, 
+  .glow-orb,
+  .recipe-guest-switcher {
     display: none !important;
   }
+  
   .recipe-panel {
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
-  }
-  .meta-item {
-    border: 1px solid #ddd !important;
-  }
-  .meta-item i {
+    margin: 0 !important;
     background: transparent !important;
-    color: #000 !important;
   }
+  
+  .recipe-header {
+    border-bottom: 2px solid #2d3748 !important;
+    padding-bottom: 1rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  #recipe-title {
+    color: #1a202c !important;
+    font-size: 24pt !important;
+  }
+  
+  .recipe-badge {
+    background: #e2e8f0 !important;
+    color: #4a5568 !important;
+    border: 1px solid #cbd5e0 !important;
+  }
+  
+  /* Layout Grid for Print */
+  .recipe-layout-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1.5fr !important;
+    gap: 2cm !important;
+    margin-bottom: 2rem !important;
+  }
+  
+  /* Metadata badges */
+  .recipe-meta-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.5cm !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .meta-item {
+    border: 1px solid #cbd5e0 !important;
+    background: #f7fafc !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 8px !important;
+    flex: 1 !important;
+    min-width: 100px !important;
+  }
+  
+  .meta-item i {
+    display: none !important; /* Hide icons in print for cleanliness */
+  }
+  
+  /* Clean checklists for pencil use */
+  .item-check-indicator {
+    border: 1.5px solid #4a5568 !important;
+    border-radius: 4px !important;
+    background: #fff !important;
+    width: 16px !important;
+    height: 16px !important;
+    color: transparent !important; /* Hide tick mark in print */
+  }
+  
+  .item-check-label {
+    color: #1a202c !important;
+    text-decoration: none !important; /* Never cross out printed ingredients */
+  }
+  
+  .recipe-step-number {
+    border: 1.5px solid #4a5568 !important;
+    background: #f7fafc !important;
+    color: #2d3748 !important;
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 9pt !important;
+  }
+  
+  .recipe-step-text {
+    color: #1a202c !important;
+    opacity: 1 !important;
+    text-decoration: none !important; /* Never cross out printed steps */
+  }
+  
+  /* Chef Speech bubble print-optimizations */
   .chef-commentary-box {
-    border: 1px solid #ddd !important;
-    background: #fafafa !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #f7fafc !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    page-break-inside: avoid;
+  }
+  
+  .chef-commentary-avatar {
+    font-size: 28pt !important;
+  }
+  
+  .chef-commentary-bubble h4 {
+    color: #2d3748 !important;
   }
 }
+
 
 /* ==========================================================================
    Guest Selector & Portions Switcher

@@ -469,11 +469,30 @@ async function testGeminiKey(key, showFeedback = true) {
       elements.apiKeyStatus.className = "api-status-indicator connected";
       elements.apiKeyStatus.innerHTML = '<span class="status-dot"></span> <span class="status-text">Clé API Connectée & Valide ! Mode IA activé.</span>';
     } else {
-      throw new Error("Clé invalide");
+      const errData = await res.json().catch(() => ({}));
+      const errMsg = errData.error?.message || `Erreur HTTP ${res.status}`;
+      
+      // Attempt to query allowed models list to display them
+      let supportedModels = "";
+      try {
+        const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${key}`;
+        const listRes = await fetch(listUrl);
+        if (listRes.ok) {
+          const listData = await listRes.json();
+          const names = (listData.models || [])
+            .filter(m => m.supportedGenerationMethods.includes("generateContent"))
+            .map(m => m.name.replace("models/", ""));
+          supportedModels = ` | Modèles disponibles : ${names.join(", ")}`;
+        }
+      } catch (listErr) {
+        console.warn("Failed to list models", listErr);
+      }
+      
+      throw new Error(`${errMsg}${supportedModels}`);
     }
   } catch (err) {
     elements.apiKeyStatus.className = "api-status-indicator error";
-    elements.apiKeyStatus.innerHTML = '<span class="status-dot"></span> <span class="status-text">Clé API invalide ou inactive.</span>';
+    elements.apiKeyStatus.innerHTML = `<span class="status-dot"></span> <span class="status-text">Clé API non fonctionnelle : ${err.message}</span>`;
   }
 }
 

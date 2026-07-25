@@ -491,8 +491,9 @@ async function testGeminiKey(key, showFeedback = true) {
       throw new Error(`${errMsg}${supportedModels}`);
     }
   } catch (err) {
+    const hexChars = Array.from(key).map(c => c.charCodeAt(0).toString(16)).join(" ");
     elements.apiKeyStatus.className = "api-status-indicator error";
-    elements.apiKeyStatus.innerHTML = `<span class="status-dot"></span> <span class="status-text">Clé API non fonctionnelle : ${err.message}</span>`;
+    elements.apiKeyStatus.innerHTML = `<span class="status-dot"></span> <span class="status-text">Clé API non fonctionnelle : ${err.message}<br><small style="color:var(--text-muted)">(Longueur : ${key.length} | Hex : ${hexChars})</small></span>`;
   }
 }
 

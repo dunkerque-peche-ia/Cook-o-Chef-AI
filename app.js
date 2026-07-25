@@ -453,7 +453,7 @@ async function testGeminiKey(key, showFeedback = true) {
     elements.apiKeyStatus.innerHTML = '<span class="status-dot flash"></span> <span class="status-text">Vérification de la clé...</span>';
   }
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${key}`;
   const requestBody = {
     contents: [{ parts: [{ text: "Reponds simplement par le mot OK" }] }]
   };

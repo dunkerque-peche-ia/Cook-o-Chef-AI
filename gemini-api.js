@@ -4,7 +4,7 @@
  * using the user's local API key, to generate highly tailored and fun recipes in JSON format.
  */
 
-const MODEL_NAME = "gemini-2.5-flash"; // Highly efficient, fast, and supports JSON output schemas
+const MODEL_NAME = "gemini-3.5-flash"; // Highly efficient, fast, and supports JSON output schemas
 
 const CHEF_PROFILES = {
   meme_gateau: {

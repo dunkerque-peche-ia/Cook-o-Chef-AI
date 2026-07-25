@@ -1593,3 +1593,401 @@ body {
   color: #050608;
 }
 
+/* ==========================================================================
+   Mobile-Responsive Design Tweaks for Smartphones
+   ========================================================================== */
+@media (max-width: 600px) {
+  /* Global spacing and container sizing */
+  .app-container {
+    margin: 1rem auto !important;
+    padding: 0 0.75rem !important;
+    gap: 1.25rem !important;
+  }
+  
+  .app-header {
+    padding: 1rem !important;
+  }
+  
+  .logo-area {
+    gap: 0.5rem !important;
+  }
+  
+  .logo-area h1 {
+    font-size: 1.4rem !important;
+  }
+  
+  .tagline {
+    font-size: 0.72rem !important;
+  }
+  
+  .intro-card {
+    padding: 1.25rem !important;
+  }
+  
+  .intro-content h2 {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.35rem !important;
+  }
+  
+  .intro-content p {
+    font-size: 0.82rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  .input-card {
+    padding: 1.25rem !important;
+  }
+  
+  .input-card h3 {
+    font-size: 1.2rem !important;
+  }
+  
+  .subtitle {
+    font-size: 0.8rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  /* Chips wrapper */
+  .quick-ingredients-grid {
+    gap: 0.4rem !important;
+  }
+  
+  .chip-btn {
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.78rem !important;
+  }
+  
+  .input-wrapper input {
+    padding: 0.6rem 0.8rem !important;
+    font-size: 0.85rem !important;
+  }
+  
+  /* Guest Selection pills */
+  .guest-selector-pills {
+    gap: 0.4rem !important;
+  }
+  
+  .guest-pill {
+    padding: 0.6rem 0.5rem !important;
+    font-size: 0.78rem !important;
+    border-radius: 10px !important;
+    gap: 0.2rem !important;
+  }
+  
+  /* Accessories Selection Cards */
+  .accessories-selection-grid {
+    gap: 0.5rem !important;
+  }
+  
+  .accessory-card-content {
+    padding: 0.75rem !important;
+    gap: 0.75rem !important;
+    border-radius: 12px !important;
+  }
+  
+  .accessory-icon {
+    font-size: 1.5rem !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 10px !important;
+  }
+  
+  .accessory-details h4 {
+    font-size: 0.88rem !important;
+  }
+  
+  .accessory-details p {
+    font-size: 0.72rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .checkbox-indicator {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  
+  /* Chefs Grid Selection */
+  .chefs-grid {
+    gap: 0.5rem !important;
+  }
+  
+  .chef-card {
+    padding: 0.8rem !important;
+    gap: 0.8rem !important;
+    border-radius: 14px !important;
+  }
+  
+  .chef-avatar {
+    font-size: 2rem !important;
+    width: 46px !important;
+    height: 46px !important;
+  }
+  
+  .chef-info h4 {
+    font-size: 0.95rem !important;
+  }
+  
+  .chef-desc {
+    font-size: 0.78rem !important;
+    margin-bottom: 0.30rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .chef-style-badge {
+    font-size: 0.7rem !important;
+    padding: 0.15rem 0.5rem !important;
+  }
+  
+  /* Action Cook button */
+  .cook-btn {
+    padding: 0.9rem 1.5rem !important;
+    font-size: 1.05rem !important;
+    border-radius: 14px !important;
+  }
+  
+  /* Loading screen */
+  .loading-panel {
+    padding: 2rem 1rem !important;
+    min-height: 280px !important;
+  }
+  
+  .cookeo-pot-animation {
+    width: 90px !important;
+    height: 90px !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .pot-body {
+    width: 75px !important;
+    height: 56px !important;
+    bottom: 8px !important;
+    left: 8px !important;
+    border-bottom-left-radius: 26px !important;
+    border-bottom-right-radius: 26px !important;
+  }
+  
+  .pot-handle {
+    width: 14px !important;
+    height: 18px !important;
+    bottom: 34px !important;
+  }
+  
+  .pot-screen {
+    width: 32px !important;
+    height: 20px !important;
+    top: 18px !important;
+    left: 20px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .pot-lid {
+    width: 77px !important;
+    height: 9px !important;
+    bottom: 63px !important;
+    left: 7px !important;
+  }
+  
+  .pot-lid-handle {
+    width: 24px !important;
+    height: 8px !important;
+    top: -8px !important;
+    left: 26px !important;
+  }
+  
+  .steam-steam {
+    top: -15px !important;
+    left: 28px !important;
+  }
+  
+  .fire-base {
+    width: 60px !important;
+    left: 15px !important;
+  }
+  
+  .loading-panel h3 {
+    font-size: 1.25rem !important;
+  }
+  
+  .loading-panel p {
+    font-size: 0.85rem !important;
+  }
+  
+  /* Recipe Panel formatting */
+  .recipe-panel {
+    padding: 1.15rem !important;
+    border-radius: 20px !important;
+  }
+  
+  .recipe-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  
+  #recipe-title {
+    font-size: 1.45rem !important;
+  }
+  
+  .recipe-actions {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    gap: 0.5rem !important;
+  }
+  
+  .recipe-actions .icon-btn-text {
+    flex: 1 !important;
+    justify-content: center !important;
+    padding: 0.5rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 10px !important;
+  }
+  
+  /* Recipe Stats Grid (2x2) */
+  .recipe-meta-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+    margin-bottom: 1.25rem !important;
+  }
+  
+  .meta-item {
+    padding: 0.65rem !important;
+    gap: 0.4rem !important;
+    border-radius: 12px !important;
+  }
+  
+  .meta-item i {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .meta-label {
+    font-size: 0.65rem !important;
+  }
+  
+  .meta-val {
+    font-size: 0.8rem !important;
+  }
+  
+  /* Layout components for Recipe */
+  .recipe-layout-grid {
+    gap: 1.25rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .recipe-ingredients-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .recipe-guest-switcher {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+  
+  .guest-pill-mini {
+    flex: 1 !important;
+    text-align: center !important;
+    padding: 0.4rem !important;
+  }
+  
+  .recipe-ingredients-list {
+    gap: 0.65rem !important;
+  }
+  
+  .ingredient-check-item {
+    font-size: 0.88rem !important;
+  }
+  
+  .recipe-steps-list {
+    gap: 0.85rem !important;
+  }
+  
+  .recipe-step-item {
+    padding: 0.5rem !important;
+    gap: 0.75rem !important;
+  }
+  
+  .recipe-step-number {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .recipe-step-text {
+    font-size: 0.88rem !important;
+    line-height: 1.45 !important;
+  }
+  
+  /* Chef Speech bubble mobile scale */
+  .chef-commentary-box {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 0.75rem !important;
+    padding: 1rem !important;
+    border-radius: 16px !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .chef-commentary-avatar {
+    font-size: 2.6rem !important;
+  }
+  
+  .chef-commentary-bubble h4 {
+    font-size: 0.95rem !important;
+    margin-bottom: 0.15rem !important;
+  }
+  
+  .chef-commentary-bubble p {
+    font-size: 0.85rem !important;
+    line-height: 1.45 !important;
+  }
+  
+  /* Modal configuration */
+  .modal-card {
+    padding: 1.15rem !important;
+    border-radius: 20px !important;
+    width: 95% !important;
+  }
+  
+  .modal-header h3 {
+    font-size: 1.1rem !important;
+  }
+  
+  .modal-body p {
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem !important;
+  }
+  
+  .form-group input {
+    padding: 0.6rem 0.8rem !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .modal-btn-row {
+    flex-direction: column-reverse !important;
+    gap: 0.5rem !important;
+  }
+  
+  .modal-btn-row button {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.65rem 1rem !important;
+    font-size: 0.88rem !important;
+  }
+  
+  .api-help ol {
+    padding-left: 1.1rem !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+

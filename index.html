@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookéo Chef AI - Recettes Cookéo personnalisées et amusantes par l'IA</title>
+  <meta name="description" content="Générez des recettes magiques et rigolotes pour votre multicuiseur Cookéo avec les ingrédients de votre frigo et vos accessoires (Extra Crisp, Moule, Panier Vapeur) !">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Background decorative glowing orbs -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="glow-orb orb-3"></div>
+
+  <!-- Header Section -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <span class="logo-icon">🤖🍳</span>
+        <div>
+          <h1>Cookéo Chef AI</h1>
+          <p class="tagline">Le chef intelligent qui cuisine avec vos placards !</p>
+        </div>
+      </div>
+      
+      <div class="header-controls">
+        <button id="sound-toggle-btn" class="icon-btn" title="Activer/Désactiver les sons">
+          <i data-lucide="volume-2"></i>
+        </button>
+        <button id="settings-btn" class="icon-btn" title="Paramètres IA (Clé Gemini)">
+          <i data-lucide="settings"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="app-container">
+    
+    <!-- Top banner / instruction -->
+    <section class="intro-card glass-panel">
+      <div class="intro-content">
+        <h2>Remplissez la cuve virtuelle ! 🌟</h2>
+        <p>Indiquez ce que vous avez sous la main, choisissez vos accessoires, sélectionnez le chef de votre choix, et laissez la magie de l'intelligence artificielle mijoter votre recette Cookéo personnalisée.</p>
+      </div>
+    </section>
+
+    <!-- Form Section -->
+    <div class="form-grid">
+      
+      <!-- Column 1: Ingredients & Accessories -->
+      <div class="form-left-col">
+        
+        <!-- Ingredients Card -->
+        <section class="input-card glass-panel" id="ingredients-section">
+          <div class="card-header">
+            <span class="step-badge">1</span>
+            <h3>Vos Ingrédients à la maison</h3>
+          </div>
+          
+          <!-- Quick Selection Chips -->
+          <div class="input-group">
+            <label class="group-label">Ingrédients populaires (cliquez pour ajouter) :</label>
+            <div class="quick-ingredients-grid">
+              <button type="button" class="chip-btn" data-ingredient="pomme de terre">🥔 Pomme de terre</button>
+              <button type="button" class="chip-btn" data-ingredient="poulet">🍗 Blanc de Poulet</button>
+              <button type="button" class="chip-btn" data-ingredient="saumon">🐟 Saumon</button>
+              <button type="button" class="chip-btn" data-ingredient="carotte">🥕 Carotte</button>
+              <button type="button" class="chip-btn" data-ingredient="oignon">🧅 Oignon</button>
+              <button type="button" class="chip-btn" data-ingredient="oeuf">🥚 Œuf</button>
+              <button type="button" class="chip-btn" data-ingredient="chocolat">🍫 Chocolat</button>
+              <button type="button" class="chip-btn" data-ingredient="pomme">🍏 Pomme</button>
+              <button type="button" class="chip-btn" data-ingredient="creme">🥛 Crème fraîche</button>
+              <button type="button" class="chip-btn" data-ingredient="fromage">🧀 Fromage râpé</button>
+            </div>
+          </div>
+          
+          <!-- Custom Ingredient Input -->
+          <div class="input-group custom-input-group">
+            <label for="custom-ingredient-input" class="group-label">Autre chose dans le frigo ?</label>
+            <div class="input-wrapper">
+              <input type="text" id="custom-ingredient-input" placeholder="Ex: riz, courgette, boeuf, moutarde..." autocomplete="off">
+              <button type="button" id="add-ingredient-btn" class="accent-btn" aria-label="Ajouter l'ingrédient">
+                <i data-lucide="plus"></i>
+              </button>
+            </div>
+            
+            <!-- List of selected custom ingredient tags -->
+            <div class="tags-container" id="ingredients-tags-list">
+              <!-- Dynamically populated tags -->
+              <span class="no-tags-placeholder">Aucun ingrédient sélectionné</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Accessories Card -->
+        <section class="input-card glass-panel" id="accessories-section">
+          <div class="card-header">
+            <span class="step-badge">2</span>
+            <h3>Vos Accessoires Cookéo (optionnels)</h3>
+          </div>
+          <p class="subtitle">Sélectionnez les accessoires dont vous disposez. L'IA les intégrera intelligemment à votre recette si nécessaire.</p>
+          
+          <div class="accessories-selection-grid">
+            <!-- Moule gateau -->
+            <label class="accessory-card">
+              <input type="checkbox" name="accessory" value="moule_gateau" class="accessory-checkbox">
+              <div class="accessory-card-content">
+                <div class="accessory-icon">🥮</div>
+                <div class="accessory-details">
+                  <h4>Moule à gâteaux</h4>
+                  <p>Modèle XA609001 pour fondants, moelleux...</p>
+                </div>
+                <div class="checkbox-indicator"><i data-lucide="check"></i></div>
+              </div>
+            </label>
+
+            <!-- Extra Crisp -->
+            <label class="accessory-card">
+              <input type="checkbox" name="accessory" value="extra_crisp" class="accessory-checkbox">
+              <div class="accessory-card-content">
+                <div class="accessory-icon">🔥</div>
+                <div class="accessory-details">
+                  <h4>Extra Crisp Cookéo</h4>
+                  <p>Couvercle Air Fryer pour dorer, frire, rôtir...</p>
+                </div>
+                <div class="checkbox-indicator"><i data-lucide="check"></i></div>
+              </div>
+            </label>
+
+            <!-- Panier vapeur -->
+            <label class="accessory-card">
+              <input type="checkbox" name="accessory" value="panier_vapeur" class="accessory-checkbox">
+              <div class="accessory-card-content">
+                <div class="accessory-icon">💨</div>
+                <div class="accessory-details">
+                  <h4>Panier Vapeur</h4>
+                  <p>Pour des cuissons saines et légumes croquants</p>
+                </div>
+                <div class="checkbox-indicator"><i data-lucide="check"></i></div>
+              </div>
+            </label>
+          </div>
+        </section>
+
+        <!-- Guests Selection Card -->
+        <section class="input-card glass-panel" id="guests-section">
+          <div class="card-header">
+            <span class="step-badge">3</span>
+            <h3>Pour combien de personnes ?</h3>
+          </div>
+          <p class="subtitle">Ajustez le nombre de convives. Les portions de la recette s'adapteront automatiquement.</p>
+          <div class="guest-selector-pills">
+            <button type="button" class="guest-pill" data-guests="2">👥 2 personnes</button>
+            <button type="button" class="guest-pill active" data-guests="4">👥 4 personnes</button>
+            <button type="button" class="guest-pill" data-guests="6">👥 6 personnes</button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Column 2: Chef Persona selection & Trigger -->
+      <div class="form-right-col">
+        
+        <!-- Chef Selection Card -->
+        <section class="input-card glass-panel" id="chefs-section">
+          <div class="card-header">
+            <span class="step-badge">4</span>
+            <h3>Choisissez votre Chef IA Persona</h3>
+          </div>
+          <p class="subtitle">Chaque chef rédigera et commentera votre recette avec son tempérament unique !</p>
+          
+          <div class="chefs-grid">
+            <!-- Meme Gateau -->
+            <div class="chef-card active" data-chef="meme_gateau">
+              <div class="chef-avatar">👵</div>
+              <div class="chef-info">
+                <h4>Mémé Gâteau</h4>
+                <p class="chef-desc">Douce et attentionnée. Adore le beurre, le fromage et réconforter ses p'tits loups.</p>
+                <span class="chef-style-badge meme">Style : Très gourmand & Amour</span>
+              </div>
+            </div>
+
+            <!-- Chef Etoile -->
+            <div class="chef-card" data-chef="chef_etoile">
+              <div class="chef-avatar">🧑‍🍳</div>
+              <div class="chef-info">
+                <h4>Le Chef Étoilé</h4>
+                <p class="chef-desc">Snob et pointilleux. Adore les termes techniques absurdes et la rigueur moléculaire.</p>
+                <span class="chef-style-badge etoile">Style : Gastronomique & Pédant</span>
+              </div>
+            </div>
+
+            <!-- Chef Rigolo -->
+            <div class="chef-card" data-chef="chef_rigolo">
+              <div class="chef-avatar">🤪</div>
+              <div class="chef-info">
+                <h4>Le Chef Gaffeur</h4>
+                <p class="chef-desc">Maladroit mais drôle. Fait des blagues ridicules et a toujours peur de faire exploser la cuisine.</p>
+                <span class="chef-style-badge rigolo">Style : Rigolo & Distrait</span>
+              </div>
+            </div>
+
+            <!-- Chef Rebelle -->
+            <div class="chef-card" data-chef="chef_rebelle">
+              <div class="chef-avatar">🌶️</div>
+              <div class="chef-info">
+                <h4>Le Chef Rebelle</h4>
+                <p class="chef-desc">Punk-rocker de la cuisine. Déteste les règles, balance tout dans la cuve et adore le piquant.</p>
+                <span class="chef-style-badge rebelle">Style : Direct & Pimenté</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Generation Trigger Area -->
+        <div class="action-panel glass-panel">
+          <div class="action-header">
+            <span class="mode-indicator" id="current-mode-badge">
+              <i data-lucide="sparkles"></i> Mode : Générateur Intégré
+            </span>
+          </div>
+          <button type="button" id="generate-recipe-btn" class="cook-btn">
+            <span class="btn-text">Mijoter ma recette magique ! 🪄</span>
+            <div class="btn-glow"></div>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Loading Animation Panel (hidden by default) -->
+    <section class="loading-panel glass-panel hidden" id="cooking-loader">
+      <div class="loader-content">
+        <div class="cookeo-pot-animation">
+          <div class="pot-body">
+            <div class="pot-handle handle-left"></div>
+            <div class="pot-handle handle-right"></div>
+            <div class="pot-screen"><span class="cooking-dots">...</span></div>
+            <div class="pot-lid">
+              <div class="pot-lid-handle"></div>
+            </div>
+          </div>
+          <div class="steam-steam">
+            <span class="steam-particle bubble-1"></span>
+            <span class="steam-particle bubble-2"></span>
+            <span class="steam-particle bubble-3"></span>
+          </div>
+          <div class="fire-base"></div>
+        </div>
+        <h3 id="loader-status-title">Préchauffage de la créativité...</h3>
+        <p id="loader-status-subtitle">Le chef rassemble vos ustensiles et prépare la sauce.</p>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="loader-progress-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recipe Display Section (hidden by default) -->
+    <section class="recipe-panel glass-panel hidden" id="recipe-display-area">
+      
+      <!-- Recipe Title Area -->
+      <div class="recipe-header">
+        <div class="recipe-title-wrapper">
+          <span class="recipe-badge" id="recipe-category-badge">Plat principal</span>
+          <h2 id="recipe-title">Titre de la Recette Cookéo</h2>
+        </div>
+        <div class="recipe-actions">
+          <button id="print-recipe-btn" class="icon-btn-text" title="Imprimer la recette">
+            <i data-lucide="printer"></i> <span>Imprimer</span>
+          </button>
+          <button id="share-recipe-btn" class="icon-btn-text" title="Partager la recette">
+            <i data-lucide="share-2"></i> <span>Partager</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Metadata Row -->
+      <div class="recipe-meta-row">
+        <div class="meta-item">
+          <i data-lucide="clock"></i>
+          <div>
+            <span class="meta-label">Préparation</span>
+            <span class="meta-val" id="recipe-prep-time">15 min</span>
+          </div>
+        </div>
+        <div class="meta-item">
+          <i data-lucide="hourglass"></i>
+          <div>
+            <span class="meta-label">Cuisson Cookéo</span>
+            <span class="meta-val" id="recipe-cook-time">22 min</span>
+          </div>
+        </div>
+        <div class="meta-item">
+          <i data-lucide="activity"></i>
+          <div>
+            <span class="meta-label">Difficulté</span>
+            <span class="meta-val" id="recipe-difficulty">Facile</span>
+          </div>
+        </div>
+        <div class="meta-item" id="recipe-acc-meta-item">
+          <i data-lucide="wrench"></i>
+          <div>
+            <span class="meta-label">Accessoire requis</span>
+            <span class="meta-val" id="recipe-accessories-badges">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Recipe Layout Grid -->
+      <div class="recipe-layout-grid">
+        
+        <!-- Left: Ingredients Check-list -->
+        <div class="recipe-ingredients-col">
+          <div class="recipe-ingredients-header">
+            <h3>🛒 Ingrédients requis</h3>
+            <div class="recipe-guest-switcher">
+              <button class="guest-pill-mini" data-guests="2">2 pers.</button>
+              <button class="guest-pill-mini active" data-guests="4">4 pers.</button>
+              <button class="guest-pill-mini" data-guests="6">6 pers.</button>
+            </div>
+          </div>
+          <p class="section-instruction">Cochez-les au fur et à mesure que vous les préparez :</p>
+          <ul class="recipe-ingredients-list" id="recipe-ingredients-list-ul">
+            <!-- Populated via JavaScript -->
+          </ul>
+        </div>
+
+        <!-- Right: Step-by-Step cooking instructions -->
+        <div class="recipe-steps-col">
+          <h3>👨‍🍳 Étapes de préparation</h3>
+          <p class="section-instruction">Suivez la recette pas-à-pas en cochant chaque étape :</p>
+          <ol class="recipe-steps-list" id="recipe-steps-list-ol">
+            <!-- Populated via JavaScript -->
+          </ol>
+        </div>
+
+      </div>
+
+      <!-- Bottom: Chef's commentary -->
+      <div class="chef-commentary-box">
+        <div class="chef-commentary-avatar" id="commentary-chef-avatar">👵</div>
+        <div class="chef-commentary-bubble">
+          <h4 id="commentary-chef-name">Mémé Gâteau dit :</h4>
+          <p id="commentary-text">"Une merveilleuse petite recette..."</p>
+        </div>
+      </div>
+
+      <div class="recipe-footer-actions">
+        <button id="cook-again-btn" class="accent-btn">
+          <i data-lucide="rotate-ccw"></i> Recommencer une nouvelle recette
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Settings Modal (API Key configuration) -->
+  <div class="modal-backdrop hidden" id="settings-modal">
+    <div class="modal-card glass-panel">
+      <div class="modal-header">
+        <h3>🔑 Paramètres de l'IA (Mode Live)</h3>
+        <button id="close-modal-btn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Par défaut, l'application fonctionne hors-ligne avec un algorithme de recettes locales amusantes.</p>
+        <p><strong>Pour utiliser la vraie puissance de l'Intelligence Artificielle</strong>, vous pouvez connecter votre clé d'API Gemini gratuite. Cela permettra de générer des recettes 100% uniques basées sur n'importe quel ingrédient !</p>
+        
+        <form id="settings-form">
+          <div class="form-group">
+            <label for="api-key-input">Clé d'API Gemini (Google AI Studio) :</label>
+            <input type="password" id="api-key-input" placeholder="Saisir votre clé AIzaSy..." autocomplete="off">
+            <span class="field-hint">Votre clé est conservée uniquement dans la mémoire locale de votre navigateur (localStorage).</span>
+          </div>
+
+          <div class="api-status-indicator" id="api-key-status">
+            <span class="status-dot"></span> <span class="status-text">Mode Hors-ligne (clé non configurée)</span>
+          </div>
+
+          <div class="modal-btn-row">
+            <button type="button" id="test-api-btn" class="secondary-btn">Tester la connexion</button>
+            <button type="submit" class="accent-btn">Enregistrer</button>
+          </div>
+        </form>
+
+        <hr class="modal-separator">
+        
+        <div class="api-help">
+          <h4>Comment obtenir une clé d'API Gemini gratuite ?</h4>
+          <ol>
+            <li>Rendez-vous sur <a href="https://aistudio.google.com/" target="_blank" rel="noopener">Google AI Studio</a>.</li>
+            <li>Connectez-vous avec votre compte Google.</li>
+            <li>Cliquez sur <strong>"Get API key"</strong> en haut à gauche.</li>
+            <li>Générez une clé et collez-la ci-dessus ! C'est 100% gratuit pour un usage personnel.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p>Conçu pour s'amuser avec son Cookéo et vider ses placards. Cookéo est une marque déposée de Moulinex. Cette application est un projet de démonstration d'assistant IA culinaire.</p>
+    <p style="margin-top: 0.5rem; font-weight: 500; color: var(--accent-teal);">Création de Dunkirk Informatique : 0783141740</p>
+  </footer>
+
+  <!-- Web Audio API Sound Generation logic & Core logic -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,150 +1,192 @@
 /**
  * Cookéo Chef AI - Gemini API Client
- * This module connects to the Google Gemini API directly from the client side,
- * using the user's local API key, to generate highly tailored and fun recipes in JSON format.
+ * Connecte directement l'application à l'API Google Gemini
+ * Génère des recettes sur-mesure spécialement calibrées pour le multicuiseur Moulinex Cookéo,
+ * ses modes de cuisson (Dorer, Cuisson sous pression, Vapeur, Mijoter, Extra Crisp)
+ * et ses accessoires (Panier vapeur, Moule gâteau, Verrines, Extra Crisp).
  */
 
-const MODEL_NAME = "gemini-3.5-flash"; // Highly efficient, fast, and supports JSON output schemas
+const PRIMARY_MODEL = "gemini-3.5-flash-lite";
+const FALLBACK_MODEL = "gemini-3.6-flash";
 
-const CHEF_PROFILES = {
+// Clé API officielle intégrée en mode invisible (fallback)
+export const BUILTIN_API_KEY = "AQ.Ab8RN6KfHNESFioOMp8bwtkF2cbFPuX4yWfVlMDpIGODK2oNZw";
+
+export const CHEF_PROFILES = {
+  coach_cookeo: {
+    title: "Coach Débutant Cookéo",
+    badge: "Pédagogue & Recettes Inratables",
+    avatar: "🧑‍🏫",
+    instructions: "Tu es le 'Coach Débutant Cookéo', un chef bienveillant, clair et rassurant. Tu t'adresses à des cuisiniers qui veulent utiliser leur Cookéo sans stress et sans code erreur (notamment l'erreur 21 manque d'eau). Tu rappelles systématiquement de bien déglacer les sucs après le mode Dorer avec une spatule en bois, de respecter les 200 ml de liquide minimum pour la mise sous pression, et d'attendre la décompression complète. Ton commentaire final est plein d'encouragements chaleureux."
+  },
   meme_gateau: {
     title: "Mémé Gâteau",
-    instructions: "Tu es Mémé Gâteau, une grand-mère extrêmement aimante, chaleureuse et gourmande. Tu adores le beurre, la crème fraîche et t'assurer que tout le monde mange à sa faim. Tu tutoies l'utilisateur en l'appelant par des petits noms doux ('mon chéri', 'mon petit oiseau', 'ma caille'). Tes instructions de cuisine doivent être rassurantes, pleines d'amour, et tu dois encourager à rajouter des touches généreuses. Ton commentaire de fin doit déborder de tendresse maternelle."
+    badge: "Grand-mère aimante & mijotés fondants",
+    avatar: "👵",
+    instructions: "Tu es Mémé Gâteau, une grand-mère extrêmement chaleureuse, gourmande et affectueuse. Pour toi, le Cookéo est la cocotte-minute magique des temps modernes ! Tu adores les viandes fondantes, les sauces généreuses et les gâteaux moelleux à la vapeur. Tu tutoies l'utilisateur en l'appelant 'mon petit bouchon', 'ma biche', 'mon grand'. Tes consignes sont douces et rassurantes."
   },
   chef_etoile: {
     title: "Chef Étoilé",
-    instructions: "Tu es un chef triplement étoilé au guide gastronomique, très prétentieux, pédant et obsédé par la technique. Tu utilises un jargon culinaire ultra-snob ('émulsion moléculaire', 'cuisson basse température', 'textures déconstruites', 'infusion rétro-olfactive'). Tu trouves que cuisiner au Cookéo est un exercice 'populaire mais ô combien fascinant'. Tes étapes doivent être rédigées avec une rigueur chirurgicale et un ton supérieur. Ton commentaire de fin doit juger le plat de manière condescendante mais satisfaite."
+    badge: "Haute Gastronomie & Précision",
+    avatar: "👨‍🍳",
+    instructions: "Tu es un chef étoilé perfectionniste et technique. Tu valorises la cuisson sous pression comme le meilleur moyen de concentrer les saveurs, d'extraire les arômes et de préserver le collagène des viandes. Tu emploies un vocabulaire culinaire précis ('réaction de Maillard au dorage', 'liaison soyeuse', 'caramélisation'). Si l'Extra Crisp est utilisé, tu exiges une coloration parfaite de la croûte."
   },
-  chef_rigolo: {
-    title: "Chef Rigolo & Maladroit",
-    instructions: "Tu es un cuisinier extrêmement sympathique mais incroyablement gaffeur et maladroit. Tu passes ton temps à faire tomber des ustensiles, à glisser sur des pelures de patates, ou à te plaindre que tu as encore taché ton beau tablier. Ton ton est très amical, dynamique et truffé de petites blagues rigolotes ou d'anecdotes absurdes. Les étapes doivent refléter cette maladresse sans pour autant perturber la recette réelle. Ton commentaire de fin doit célébrer le fait que la cuisine n'a pas explosé."
+  chef_express: {
+    title: "Chef Express & Rigolo",
+    badge: "Cuisine en 10 min chrono & Humour",
+    avatar: "🤪",
+    instructions: "Tu es un cuisinier ultra pressé, dynamique et gaffeur mais très drôle. Tu adores les One-Pot express où l'on jette tout dans la cuve pour que ce soit prêt en 6 minutes chrono. Tu plaisantes sur la vapeur qui souffle comme un geyser et la sonnerie du Cookéo qui réveille toute la maison. Ton commentaire final célèbre un repas ultra-rapide sans prise de tête !"
   },
-  chef_rebelle: {
-    title: "Chef Rebelle (Punk-Rock)",
-    instructions: "Tu es un chef punk, rebelle, tatoué, qui déteste les règles de la grande cuisine. Pour toi, la cuisine doit être sauvage, brute et sans chichis. Tu dis de couper les légumes grossièrement, de ne pas peser au gramme près, et d'ajouter des épices ou du piment à tout va. Tu tutoies l'utilisateur avec un ton direct et rock'n'roll ('écoute-moi bien', 'fais pas de chichis', 'c'est parti mon pote'). Ton commentaire de fin doit avoir l'énergie d'un concert de rock."
+  chef_crisp: {
+    title: "Chef Rock & Extra Crisp",
+    badge: "Doré, Croustillant & Gourmand",
+    avatar: "🎸",
+    instructions: "Tu es un chef énergique, fan de textures croustillantes et de plats réconfortants bien dorés. Tu adores combiner la cuisson sous pression pour rendre la chair ultra tendre, suivie d'un coup de boost avec le couvercle Extra Crisp à 200°C pour gratiner le fromage ou dorer la peau de poulet. Ton ton est percutant, direct ('écoute bien', 'fais chauffer la cuve', 'envoie le croustillant')."
   }
 };
 
 /**
- * Calls Gemini API to generate a structured recipe in French.
- * 
- * @param {string[]} userIngredients List of user ingredients
- * @param {string[]} selectedAccessories List of accessories selected by user
- * @param {string} chefPersona Selected chef persona key
- * @param {string} apiKey Gemini API Key
- * @returns {Promise<Object>} The parsed recipe object
+ * Appelle l'API Google Gemini pour créer une recette 100% sur-mesure pour le Cookéo
  */
-export async function generateGeminiRecipe(userIngredients, selectedAccessories, chefPersona, apiKey) {
-  if (!apiKey) {
-    throw new Error("Clé API manquante. Veuillez configurer votre clé dans les paramètres.");
+export async function generateCookeoRecipe({
+  userIngredients,
+  cookeoModel,
+  selectedAccessories,
+  chefPersona,
+  guests = 4,
+  mealType = "plat",
+  diet = "tous",
+  maxTime = "45",
+  useExtraCrisp = false,
+  apiKey = null
+}) {
+  const activeKey = (apiKey && apiKey.trim()) || BUILTIN_API_KEY;
+  if (!activeKey) {
+    throw new Error("Clé API Gemini manquante. Veuillez configurer votre clé dans les paramètres (icône engrenage).");
   }
 
-  const chef = CHEF_PROFILES[chefPersona] || CHEF_PROFILES.meme_gateau;
-  
-  const accessoryMapping = {
-    moule_gateau: "Moule à gâteau XA609001",
-    extra_crisp: "Couvercle Extra Crisp (Air Fryer)",
-    panier_vapeur: "Panier Vapeur Cookéo"
-  };
+  const chef = CHEF_PROFILES[chefPersona] || CHEF_PROFILES.coach_cookeo;
+  const isMini = cookeoModel && cookeoModel.id === "mini";
+  const minWaterMl = isMini ? 150 : 200;
 
-  const formattedAccessories = selectedAccessories.length > 0
-    ? selectedAccessories.map(acc => accessoryMapping[acc] || acc).join(", ")
-    : "Aucun accessoire (cuve du Cookéo standard uniquement)";
+  const systemInstructions = `
+Tu es un chef cuisinier expert spécialisé dans le multicuiseur Moulinex Cookéo (tous modèles : Cookéo Classique, Cookéo +, Cookéo Touch, Cookéo Touch Pro avec balance, Cookéo Mini 3L, Cookéo Gourmet/Infinity) et son accessoire phare le couvercle Extra Crisp.
 
-  const prompt = `
-Tu es un chef cuisinier virtuel et un assistant culinaire hors-pair spécialisé dans l'appareil de cuisson Cookéo de Moulinex.
-Tu dois concevoir une recette originale, savoureuse, logique et techniquement réalisable au Cookéo, en utilisant uniquement ou majoritairement les ingrédients fournis et les accessoires disponibles.
+${chef.instructions}
 
-CONSTRAINTES DE LA RECETTE :
-- Ingrédients à disposition : ${userIngredients.join(", ")} (tu peux ajouter des basiques de placard très courants si nécessaire comme sel, poivre, eau, huile, beurre, farine).
-- Accessoires Cookéo disponibles : ${formattedAccessories}. IMPORTANT: N'utilise ces accessoires dans la recette que s'ils sont listés ici ET s'ils apportent une réelle valeur ajoutée (ex: Extra Crisp pour dorer/griller, Moule pour un gâteau/fondant, Panier Vapeur pour la vapeur). Sinon, fais la recette directement dans la cuve du Cookéo.
-- Langue : Français de France.
-- Ton à adopter : ${chef.instructions}
+CONSIGNES STRICTES COOKÉO :
+1. APPAREIL CIBLÉ : ${cookeoModel.name} (Capacité: ${cookeoModel.capacity}).
+2. ACCESSOIRES DISPONIBLES : ${selectedAccessories.map(a => a.name).join(", ")}.
+3. CONVIVES : ${guests} personnes.
+4. TYPE DE PLAT : ${mealType}.
+5. RÉGIME ALIMENTAIRE : ${diet}.
+6. TEMPS MAXIMUM : ${maxTime} minutes.
+7. OPTION EXTRA CRISP SOUHAITÉE : ${useExtraCrisp ? "OUI, utilise le couvercle Extra Crisp pour une phase de dorure/gratin/croustillant" : "NON, cuisson cuve Cookéo standard"}.
 
-Tu devez renvoyer le résultat sous la forme d'un objet JSON contenant les propriétés suivantes :
-1. "name" : Titre de la recette attrayant et fun.
-2. "prepTime" : Temps de préparation en minutes (nombre entier).
-3. "cookTime" : Temps de cuisson au Cookéo en minutes (nombre entier).
-4. "difficulty" : Niveau de difficulté ("Facile", "Moyen", "Difficile").
-5. "accessories" : Tableau de chaînes contenant les identifiants techniques des accessoires RÉELLEMENT utilisés dans la recette (choisis parmi : "moule_gateau", "extra_crisp", "panier_vapeur"). Laisse le tableau vide s'il n'y a pas d'accessoire requis.
-6. "ingredients" : Tableau d'objets. Chaque objet représente un ingrédient requis avec les champs : "name" (nom, ex: "pommes de terre"), "quantity" (nombre représentant la quantité requise PAR PERSONNE, ex: 200 pour 200g, 10 pour 10cl, 0.5 pour une demi, 0 si pas de quantité comme sel/poivre), et "unit" (unité abrégée, ex: "g", "cl", "gousse", "pincée", "portion" ou vide ""). Rends les quantités réalistes par personne !
-7. "steps" : Tableau de chaînes. Chaque chaîne est une étape claire de préparation. Le style d'écriture de chaque étape doit refléter le ton et la personnalité du chef choisi !
-8. "commentary" : Le mot de fin humoristique et chaleureux du chef, rédigé à la première personne du singulier dans son style unique.
+RÈGLES D'OR DE SÉCURITÉ ET TECHNIQUE DU COOKÉO :
+- TOUTE CUISSON SOUS PRESSION nécessite un minimum ABSOLU de ${minWaterMl} ml de liquide (eau, vin blanc, bouillon, sauce liquide fluide) dans la cuve pour créer la vapeur et éviter le code Erreur 21 (Manque d'eau).
+- Après le mode Dorer (viande, oignons), TOUJOURS inclure une étape de "Déglaçage des sucs" avec un peu de liquide en grattant le fond avec une spatule pour décoller les sucs (indispensable pour que le fond ne brûle pas sous pression).
+- Pour les pâtes en "One-Pot Pasta", le temps sous pression = Temps indiqué sur le paquet de pâtes divisé par 2.
+- Pour les gâteaux cuits au moule vapeur Cookéo, toujours rappeler de couvrir le moule de film étirable résistant à la chaleur pour éviter la condensation.
+- Si le couvercle Extra Crisp est utilisé, préciser qu'il s'utilise Cookéo éteint, posé sur la cuve avec son propre programme (1: Rôtir, 2: Griller, 3: Frire, 4: Cuire gâteau) et température (160°C - 200°C).
+
+Tu dois impérativement répondre UNIQUEMENT sous forme d'un objet JSON valide (sans backticks markdown \`\`\`json, juste le texte JSON brut).
+
+FORMAT JSON STRICT ATTENDU :
+{
+  "title": "Nom gourmand de la recette",
+  "category": "Catégorie de plat",
+  "prepTime": "XX min",
+  "cookTime": "XX min",
+  "pressureTime": "XX min",
+  "dorerTime": "XX min (ou 0 min)",
+  "extraCrispTime": "XX min (ou 0 min)",
+  "totalTime": "XX min",
+  "guests": ${guests},
+  "difficulty": "Inratable / Facile / Moyen",
+  "cookeoModes": ["dorer", "sous_pression", "extra_crisp", "vapeur"],
+  "accessoriesUsed": ["cuve", "extra_crisp", "panier_vapeur"],
+  "extraCrispOption": ${useExtraCrisp},
+  "liquidVolume": "Volume précis de liquide (ex: ${minWaterMl} ml de bouillon)",
+  "goldenRuleAlert": "Rappel de sécurité spécifique (ex: ${minWaterMl} ml de bouillon minimum pour éviter l'erreur 21)",
+  "description": "Courte description alléchante de la recette (2 phrases)",
+  "ingredients": [
+    { "name": "Nom de l'ingrédient", "quantity": 500, "unit": "g" }
+  ],
+  "steps": [
+    {
+      "stepNumber": 1,
+      "title": "Titre de l'étape",
+      "mode": "dorer / sous_pression / extra_crisp / vapeur / manuel",
+      "duration": "5 min",
+      "timerSeconds": 300,
+      "text": "Explications pas-à-pas claires avec réglage exact du Cookéo"
+    }
+  ],
+  "chefTips": "Astuce secrète du chef pour sublimer le plat au Cookéo",
+  "chefPersonaComment": "Commentaire final avec la voix et le caractère du chef"
+}
 `;
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`;
+  const userPrompt = `
+Crée une recette Cookéo sur-mesure avec ces ingrédients du frigo et placards :
+${userIngredients.join(", ")}
+Adapte précisément pour ${guests} convives sur le modèle ${cookeoModel.name}.
+`;
 
-  const requestBody = {
-    contents: [
-      {
-        parts: [
-          { text: prompt }
-        ]
+  let lastError = null;
+  const modelsToTry = [PRIMARY_MODEL, FALLBACK_MODEL];
+
+  for (const model of modelsToTry) {
+    try {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeKey}`;
+      
+      const payload = {
+        contents: [
+          {
+            role: "user",
+            parts: [
+              { text: systemInstructions },
+              { text: userPrompt }
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 2048,
+          responseMimeType: "application/json"
+        }
+      };
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`Erreur API Gemini (${response.status}): ${errorData.error?.message || response.statusText}`);
       }
-    ],
-    generationConfig: {
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: "OBJECT",
-        properties: {
-          name: { type: "STRING" },
-          prepTime: { type: "INTEGER" },
-          cookTime: { type: "INTEGER" },
-          difficulty: { type: "STRING" },
-          accessories: {
-            type: "ARRAY",
-            items: { type: "STRING" }
-          },
-          ingredients: {
-            type: "ARRAY",
-            items: {
-              type: "OBJECT",
-              properties: {
-                name: { type: "STRING" },
-                quantity: { type: "NUMBER" },
-                unit: { type: "STRING" }
-              },
-              required: ["name", "quantity", "unit"]
-            }
-          },
-          steps: {
-            type: "ARRAY",
-            items: { type: "STRING" }
-          },
-          commentary: { type: "STRING" }
-        },
-        required: ["name", "prepTime", "cookTime", "difficulty", "accessories", "ingredients", "steps", "commentary"]
+
+      const data = await response.json();
+      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!rawText) {
+        throw new Error("Réponse vide reçue de l'API Gemini.");
       }
+
+      // Nettoyer les balises de code si présentes
+      const cleanedJson = rawText.replace(/```json/gi, "").replace(/```/g, "").trim();
+      const parsedRecipe = JSON.parse(cleanedJson);
+
+      return parsedRecipe;
+    } catch (err) {
+      console.warn(`Échec avec le modèle ${model}:`, err.message);
+      lastError = err;
     }
-  };
-
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(requestBody)
-    });
-
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      const errMsg = errData.error?.message || `Erreur HTTP ${response.status}`;
-      throw new Error(`API Gemini a répondu par une erreur : ${errMsg}`);
-    }
-
-    const data = await response.json();
-    
-    // Extract text from Gemini response structure
-    const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!jsonText) {
-      throw new Error("Réponse de l'API vide ou malformée.");
-    }
-
-    const recipe = JSON.parse(jsonText);
-    return recipe;
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    throw error;
   }
+
+  throw lastError || new Error("Impossible de générer la recette avec l'IA Gemini.");
 }
